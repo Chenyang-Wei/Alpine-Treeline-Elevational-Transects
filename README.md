@@ -1,4 +1,4 @@
-# **Alpine Treeline Elevational Transects v1.0**
+# **Alpine Treeline Elevational Transects v1.0** [![DOI](https://zenodo.org/badge/754369727.svg)](https://zenodo.org/doi/10.5281/zenodo.10729434)
 
 Elevational transects within alpine treeline ecotones worldwide.
 
