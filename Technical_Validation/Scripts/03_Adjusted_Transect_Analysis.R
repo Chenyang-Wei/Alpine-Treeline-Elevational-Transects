@@ -137,4 +137,3 @@ rotatedVCH_DF %>%
 rotatedNDVI_DF %>% 
   summary()
 
-

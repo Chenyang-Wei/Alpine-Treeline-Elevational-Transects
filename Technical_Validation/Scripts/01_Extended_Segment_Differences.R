@@ -214,6 +214,10 @@ boxplot <-
 boxplot
 
 # Output the box plot.
+if (!dir.exists(wd_Figs)) {
+  dir.create(wd_Figs)
+}
+
 png(filename = file.path(
   wd_Figs, 
   paste0(filePrefix, "TwoDiff_Boxplot.png")), 
