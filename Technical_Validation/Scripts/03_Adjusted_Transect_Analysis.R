@@ -12,25 +12,21 @@
 library(tidyverse)
 library(sf)
 
-## Object definition.
 # Define the working directories.
 wd_Transects <- "Your-File-Path"
-# Please update this file path with the location where
-#   the relevant datasets of transect samples are stored.
+# (Please update this file path with the location where
+#   the relevant datasets of transect samples are stored.)
 
 
 # 1) Dataset loading. -----------------------------------------------------
 
 # Load the NDVI/VCH differences of the extended transects.
-folderName <- "Extension"
-
 filePrefix <- "extended"
 
 TwoDiff_FN <- paste0(filePrefix, "Transects_TwoDiff")
 
 extended_SHP <- st_read(
   file.path(wd_Transects,
-            folderName,
             TwoDiff_FN),
   layer = TwoDiff_FN,
   stringsAsFactors = TRUE)
@@ -39,15 +35,12 @@ nrow(extended_SHP) # 45872.
 # head(extended_SHP)
 
 # Load the NDVI/VCH differences of the rotated transects.
-folderName <- "Rotation"
-
 filePrefix <- "rotated"
 
 TwoDiff_FN <- paste0(filePrefix, "Transects_TwoDiff")
 
 rotated_SHP <- st_read(
   file.path(wd_Transects,
-            folderName,
             TwoDiff_FN),
   layer = TwoDiff_FN,
   stringsAsFactors = TRUE)

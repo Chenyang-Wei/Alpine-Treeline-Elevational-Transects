@@ -15,31 +15,25 @@ library(sf)
 # Set the theme of plots.
 theme_set(theme_bw())
 
-## Object definition.
 # Define the working directories.
 wd_Transects <- "Your-File-Path"
-# Please update this file path with the location where
-#   the relevant datasets of transect samples are stored.
+# (Please update this file path with the location where
+#   the relevant datasets of transect samples are stored.)
 
 wd_Figs <- 
   file.path(wd_Transects,
             "Figures")
 
-# Define the variable/file/folder names
-#   for the extended transects.
-folderName <- "Extension"
-
-filePrefix <- "extended"
-
 
 # 1) Dataset loading. -----------------------------------------------------
 
 # Load the NDVI/VCH differences of the extended transects.
+filePrefix <- "extended"
+
 TwoDiff_FN <- paste0(filePrefix, "Transects_TwoDiff")
 
 transects_TwoDiff_SHP <- st_read(
   file.path(wd_Transects,
-            folderName,
             TwoDiff_FN),
   layer = TwoDiff_FN,
   stringsAsFactors = TRUE)
