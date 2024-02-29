@@ -3,7 +3,7 @@
 # 1) Analyze the NDVI/VCH differences
 #   of the extended/rotated transect segments.
 
-# Updated: 11/2/2023.
+# Updated: 02/29/2024.
 
 
 # 0) Setup. ---------------------------------------------------------------
@@ -14,7 +14,9 @@ library(sf)
 
 ## Object definition.
 # Define the working directories.
-wd_Treeline <- "C:/Research_Projects/Treeline_LOCAL"
+wd_Treeline <- "Your-File-Path"
+# Please update this file path with the location
+#   where the transect datasets are stored.
 
 wd_Transects <- 
   file.path(wd_Treeline, 

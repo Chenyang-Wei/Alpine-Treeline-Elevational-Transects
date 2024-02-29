@@ -3,7 +3,7 @@
 # 1) Create a box plot of the NDVI/VCH differences
 #   of the rotated transect segments.
 
-# Updated: 10/27/2023.
+# Updated: 02/29/2024.
 
 
 # 0) Setup. ---------------------------------------------------------------
@@ -17,7 +17,9 @@ theme_set(theme_bw())
 
 ## Object definition.
 # Define the working directories.
-wd_Treeline <- "C:/Research_Projects/Treeline_LOCAL"
+wd_Treeline <- "Your-File-Path"
+# Please update this file path with the location
+#   where the transect datasets are stored.
 
 wd_Transects <- 
   file.path(wd_Treeline, 
