@@ -17,14 +17,9 @@ theme_set(theme_bw())
 
 ## Object definition.
 # Define the working directories.
-wd_Treeline <- "Your-File-Path"
-# Please update this file path with the location
-#   where the transect datasets are stored.
-
-wd_Transects <- 
-  file.path(wd_Treeline, 
-            "Elevational_Transects_LOCAL",
-            "Sampled_Transects")
+wd_Transects <- "Your-File-Path"
+# Please update this file path with the location where
+#   the relevant datasets of transect samples are stored.
 
 wd_Figs <- 
   file.path(wd_Transects,
