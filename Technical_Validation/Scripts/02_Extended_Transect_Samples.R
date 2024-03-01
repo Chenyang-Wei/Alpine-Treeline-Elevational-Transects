@@ -1,7 +1,7 @@
 # Introduction. -----------------------------------------------------------
 
 # 1) Create a box plot of the NDVI/VCH differences between the upper and lower
-#   segments of the rotated transect samples.
+#   segments of the extended transect samples.
 
 # Author: Chenyang Wei (E-mail: ChenyangWei.CWei@gmail.com)
 # Updated: 03/01/2024
@@ -21,27 +21,39 @@ wd_Transects <- "Your-File-Path"
 # (Please update this file path with the location where
 #   the relevant datasets of transect samples are stored.)
 
-wd_Figs <- 
-  file.path(wd_Transects,
-            "Figures")
+wd_Figs <- file.path(
+  wd_Transects, "Figures")
+
+if(!dir.exists(wd_Figs)) {
+  dir.create(wd_Figs)
+}
 
 
 # 1) Dataset loading. -----------------------------------------------------
 
-# Load the NDVI/VCH differences of the rotated transects.
-filePrefix <- "rotated"
+# Determine the file format.
+from_a_geopackage <- TRUE # Please change this to FALSE for a "shapefile".
+
+# Load the NDVI/VCH differences of the extended transects.
+filePrefix <- "extended"
 
 TwoDiff_FN <- paste0(filePrefix, "Transects_TwoDiff")
 
-transects_TwoDiff_SHP <- st_read(
-  file.path(wd_Transects,
-            TwoDiff_FN),
-  layer = TwoDiff_FN,
-  stringsAsFactors = TRUE)
+if (from_a_geopackage) {
+  transects_TwoDiff_SF <- st_read(
+    dsn = file.path(wd_Transects, "Adjusted_Transect_Samples.gpkg"),
+    layer = TwoDiff_FN,
+    stringsAsFactors = TRUE)
+} else {
+  transects_TwoDiff_SF <- st_read(
+    file.path(wd_Transects, TwoDiff_FN),
+    layer = TwoDiff_FN,
+    stringsAsFactors = TRUE)
+}
 
 # Check the loaded dataset.
-nrow(transects_TwoDiff_SHP) # 66345.
-summary(transects_TwoDiff_SHP)
+nrow(transects_TwoDiff_SF) # 45872.
+summary(transects_TwoDiff_SF)
 
 
 # 2) NDVI difference preprocessing. ---------------------------------------
@@ -52,20 +64,18 @@ prefix <- paste0(varName, "_")
 
 # Select the NDVI differences.
 transects_NDVIdiff_DF <- 
-  transects_TwoDiff_SHP|> 
+  transects_TwoDiff_SF|> 
   select(ET_ID | starts_with(prefix))|> 
   st_drop_geometry()
 
 colnames(transects_NDVIdiff_DF)
 
-# Rename the columns.
+# Rename the columns. 
 transects_NDVIdiff_Renamed <- 
   transects_NDVIdiff_DF|> 
   rename_with(.fn = ~ gsub(prefix, "", .), # Remove the prefix.
               .cols = -ET_ID)|> 
-  rename_with(.fn = ~ gsub("\\.", "-", .), # Replace "." with "-".
-              .cols = -ET_ID)|> 
-  rename_with(.fn = ~ str_c(., "°"), # Add a "°" at the end.
+  rename_with(.fn = ~ gsub("_", ".", .), # Replace "_" with ".".
               .cols = -ET_ID)
 
 colnames(transects_NDVIdiff_Renamed)
@@ -73,7 +83,7 @@ colnames(transects_NDVIdiff_Renamed)
 # Rearrange the dataset.
 transects_NDVIdiff_Gathered <- 
   transects_NDVIdiff_Renamed|> 
-  gather(key = "Angle", 
+  gather(key = "Ratio", 
          value = "Difference", 
          -ET_ID)|> 
   mutate(Type = varName)
@@ -89,7 +99,7 @@ prefix <- paste0(varName, "_")
 
 # Select the VCH differences.
 transects_VCHdiff_DF <- 
-  transects_TwoDiff_SHP|> 
+  transects_TwoDiff_SF|> 
   select(ET_ID | starts_with(prefix))|> 
   st_drop_geometry()
 
@@ -100,9 +110,7 @@ transects_VCHdiff_Renamed <-
   transects_VCHdiff_DF|> 
   rename_with(.fn = ~ gsub(prefix, "", .), # Remove the prefix.
               .cols = -ET_ID)|> 
-  rename_with(.fn = ~ gsub("\\.", "-", .), # Replace "." with "-".
-              .cols = -ET_ID)|> 
-  rename_with(.fn = ~ str_c(., "°"), # Add a "°" at the end.
+  rename_with(.fn = ~ gsub("_", ".", .), # Replace "_" with ".".
               .cols = -ET_ID)
 
 colnames(transects_VCHdiff_Renamed)
@@ -110,7 +118,7 @@ colnames(transects_VCHdiff_Renamed)
 # Rearrange the dataset.
 transects_VCHdiff_Gathered <- 
   transects_VCHdiff_Renamed|> 
-  gather(key = "Angle", 
+  gather(key = "Ratio", 
          value = "Difference", 
          -ET_ID)|> 
   mutate(Type = varName)
@@ -137,9 +145,9 @@ transects_TwoDiff_Processed <-
 
 # Change the format and level orders of "Angle" and "Type"
 #   for a better visualization.
-transects_TwoDiff_Processed$Angle <- factor(
-  transects_TwoDiff_Processed$Angle, 
-  c("-90°", "-60°", "-30°", "0°", "30°", "60°", "90°"))
+transects_TwoDiff_Processed$Ratio <- 
+  transects_TwoDiff_Processed$Ratio|> 
+  as.factor()
 
 transects_TwoDiff_Processed$Type <- factor(
   transects_TwoDiff_Processed$Type, 
@@ -161,7 +169,7 @@ NDVI_color <- "darkgreen"
 boxplot <- 
   ggplot(transects_TwoDiff_Processed) +
   geom_boxplot(
-    mapping = aes(x = Angle, y = Difference, 
+    mapping = aes(x = Ratio, y = Difference, 
                   fill = Type, color = Type), 
     position = position_dodge(0.5), 
     width = 0.5, 
@@ -169,12 +177,11 @@ boxplot <-
   geom_hline(yintercept = 0,
              color = "red", alpha = 0.5,
              lty = "dashed", lwd = 0.5) + 
-  xlab("Angle") +
+  xlab("Ratio") +
   scale_y_continuous(
     # Features of the first Y-axis (VCH).
     name = "Canopy height difference (m)",
-    limits = c(-16, 8),
-    breaks = seq(-15, 5, by = 5),
+    limits = c(-20, 10),
     
     # Add a second Y-axis (NDVI) and specify its features.
     sec.axis = sec_axis(~ . / coeff, 
@@ -209,10 +216,6 @@ boxplot <-
 boxplot
 
 # Output the box plot.
-if (!dir.exists(wd_Figs)) {
-  dir.create(wd_Figs)
-}
-
 png(filename = file.path(
   wd_Figs, 
   paste0(filePrefix, "TwoDiff_Boxplot.png")), 

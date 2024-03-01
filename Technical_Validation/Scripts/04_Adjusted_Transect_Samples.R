@@ -21,41 +21,56 @@ wd_Transects <- "Your-File-Path"
 
 # 1) Dataset loading. -----------------------------------------------------
 
+# Determine the file format.
+from_a_geopackage <- TRUE # Please change this to FALSE for a "shapefile".
+
 # Load the NDVI/VCH differences of the extended transects.
 filePrefix <- "extended"
 
 TwoDiff_FN <- paste0(filePrefix, "Transects_TwoDiff")
 
-extended_SHP <- st_read(
-  file.path(wd_Transects,
-            TwoDiff_FN),
-  layer = TwoDiff_FN,
-  stringsAsFactors = TRUE)
+if (from_a_geopackage) {
+  extended_SF <- st_read(
+    dsn = file.path(wd_Transects, "Adjusted_Transect_Samples.gpkg"),
+    layer = TwoDiff_FN,
+    stringsAsFactors = TRUE)
+} else {
+  extended_SF <- st_read(
+    file.path(wd_Transects, TwoDiff_FN),
+    layer = TwoDiff_FN,
+    stringsAsFactors = TRUE)
+}
 
 # Examine the extended transects.
-nrow(extended_SHP) # 45872.
-head(extended_SHP)
+nrow(extended_SF) # 45872.
+head(extended_SF)
 
 # Load the NDVI/VCH differences of the rotated transects.
 filePrefix <- "rotated"
 
 TwoDiff_FN <- paste0(filePrefix, "Transects_TwoDiff")
 
-rotated_SHP <- st_read(
-  file.path(wd_Transects,
-            TwoDiff_FN),
-  layer = TwoDiff_FN,
-  stringsAsFactors = TRUE)
+if (from_a_geopackage) {
+  rotated_SF <- st_read(
+    dsn = file.path(wd_Transects, "Adjusted_Transect_Samples.gpkg"),
+    layer = TwoDiff_FN,
+    stringsAsFactors = TRUE)
+} else {
+  rotated_SF <- st_read(
+    file.path(wd_Transects, TwoDiff_FN),
+    layer = TwoDiff_FN,
+    stringsAsFactors = TRUE)
+}
 
 # Examine the rotated transects.
-nrow(rotated_SHP) # 66345.
-head(rotated_SHP)
+nrow(rotated_SF) # 66345.
+head(rotated_SF)
 
 
 # 2) Check the extended transects. ----------------------------------------
 
 extended_DF <- 
-  extended_SHP|> 
+  extended_SF|> 
   st_drop_geometry()
 
 # VCH difference.
@@ -73,7 +88,7 @@ extendedVCH_DF|>
   summarise(across(where(is.numeric), 
                    .fns = list(
                      median = median
-                   )))%>%
+                   )))|> 
   pivot_longer(everything())|> 
   arrange(desc(value))
 
@@ -81,7 +96,7 @@ extendedNDVI_DF|>
   summarise(across(where(is.numeric), 
                    .fns = list(
                      median = median
-                   )))%>%
+                   )))|> 
   pivot_longer(everything())|> 
   arrange(desc(value))
 
@@ -96,7 +111,7 @@ extendedNDVI_DF|>
 # 3) Check the rotated transects. -----------------------------------------
 
 rotated_DF <- 
-  rotated_SHP|> 
+  rotated_SF|> 
   st_drop_geometry()
 
 # VCH difference.
@@ -114,7 +129,7 @@ rotatedVCH_DF|>
   summarise(across(where(is.numeric), 
                    .fns = list(
                      median = median
-                   )))%>%
+                   )))|> 
   pivot_longer(everything())|> 
   arrange(desc(value))
 
@@ -122,7 +137,7 @@ rotatedNDVI_DF|>
   summarise(across(where(is.numeric), 
                    .fns = list(
                      median = median
-                   )))%>%
+                   )))|> 
   pivot_longer(everything())|> 
   arrange(desc(value))
 
