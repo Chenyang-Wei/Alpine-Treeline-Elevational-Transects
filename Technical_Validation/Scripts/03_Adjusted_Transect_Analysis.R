@@ -3,7 +3,8 @@
 # 1) Analyze the NDVI/VCH differences between the upper and lower
 #   segments of the extended and rotated transect samples, respectively.
 
-# Updated: 02/29/2024.
+# Author: Chenyang Wei (E-mail: ChenyangWei.CWei@gmail.com)
+# Updated: 03/01/2024
 
 
 # 0) Setup. ---------------------------------------------------------------
