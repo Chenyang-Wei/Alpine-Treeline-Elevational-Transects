@@ -1,7 +1,7 @@
 # Introduction. -----------------------------------------------------------
 
-# 1) Analyze the NDVI/VCH differences
-#   of the extended/rotated transect segments.
+# 1) Analyze the NDVI/VCH differences between the upper and lower
+#   segments of the extended and rotated transect samples, respectively.
 
 # Updated: 02/29/2024.
 
@@ -31,8 +31,9 @@ extended_SHP <- st_read(
   layer = TwoDiff_FN,
   stringsAsFactors = TRUE)
 
+# Examine the extended transects.
 nrow(extended_SHP) # 45872.
-# head(extended_SHP)
+head(extended_SHP)
 
 # Load the NDVI/VCH differences of the rotated transects.
 filePrefix <- "rotated"
@@ -45,88 +46,89 @@ rotated_SHP <- st_read(
   layer = TwoDiff_FN,
   stringsAsFactors = TRUE)
 
+# Examine the rotated transects.
 nrow(rotated_SHP) # 66345.
-# head(rotated_SHP)
+head(rotated_SHP)
 
 
 # 2) Check the extended transects. ----------------------------------------
 
 extended_DF <- 
-  extended_SHP %>% 
+  extended_SHP|> 
   st_drop_geometry()
 
 # VCH difference.
 extendedVCH_DF <- 
-  extended_DF %>% 
+  extended_DF|> 
   select(starts_with("VCH"))
 
 # NDVI difference.
 extendedNDVI_DF <- 
-  extended_DF %>% 
+  extended_DF|> 
   select(starts_with("NDVI"))
 
-# Median.
-extendedVCH_DF %>% 
+# Median values.
+extendedVCH_DF|> 
   summarise(across(where(is.numeric), 
                    .fns = list(
                      median = median
                    )))%>%
-  pivot_longer(everything()) %>% 
+  pivot_longer(everything())|> 
   arrange(desc(value))
 
-extendedNDVI_DF %>% 
+extendedNDVI_DF|> 
   summarise(across(where(is.numeric), 
                    .fns = list(
                      median = median
                    )))%>%
-  pivot_longer(everything()) %>% 
+  pivot_longer(everything())|> 
   arrange(desc(value))
 
-# Summary.
-extendedVCH_DF %>% 
+# Summary statistics.
+extendedVCH_DF|> 
   summary()
 
-extendedNDVI_DF %>% 
+extendedNDVI_DF|> 
   summary()
 
 
 # 3) Check the rotated transects. -----------------------------------------
 
 rotated_DF <- 
-  rotated_SHP %>% 
+  rotated_SHP|> 
   st_drop_geometry()
 
 # VCH difference.
 rotatedVCH_DF <- 
-  rotated_DF %>% 
+  rotated_DF|> 
   select(starts_with("VCH"))
 
 # NDVI difference.
 rotatedNDVI_DF <- 
-  rotated_DF %>% 
+  rotated_DF|> 
   select(starts_with("NDVI"))
 
-# Median.
-rotatedVCH_DF %>% 
+# Median values.
+rotatedVCH_DF|> 
   summarise(across(where(is.numeric), 
                    .fns = list(
                      median = median
                    )))%>%
-  pivot_longer(everything()) %>% 
+  pivot_longer(everything())|> 
   arrange(desc(value))
 
-rotatedNDVI_DF %>% 
+rotatedNDVI_DF|> 
   summarise(across(where(is.numeric), 
                    .fns = list(
                      median = median
                    )))%>%
-  pivot_longer(everything()) %>% 
+  pivot_longer(everything())|> 
   arrange(desc(value))
 
-# Summary.
-rotatedVCH_DF %>% 
+# Summary statistics.
+rotatedVCH_DF|> 
   summary()
 
-rotatedNDVI_DF %>% 
+rotatedNDVI_DF|> 
   summary()
 

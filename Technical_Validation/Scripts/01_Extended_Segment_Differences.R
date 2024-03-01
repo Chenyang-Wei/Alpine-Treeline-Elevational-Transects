@@ -1,7 +1,7 @@
 # Introduction. -----------------------------------------------------------
 
-# 1) Create a box plot of the NDVI/VCH differences
-#   of the extended transect segments.
+# 1) Create a box plot of the NDVI/VCH differences between the upper and lower
+#   segments of the extended transect samples.
 
 # Updated: 02/29/2024.
 
@@ -38,8 +38,9 @@ transects_TwoDiff_SHP <- st_read(
   layer = TwoDiff_FN,
   stringsAsFactors = TRUE)
 
+# Check the loaded dataset.
 nrow(transects_TwoDiff_SHP) # 45872.
-# summary(transects_TwoDiff_SHP)
+summary(transects_TwoDiff_SHP)
 
 
 # 2) NDVI difference preprocessing. ---------------------------------------
@@ -50,31 +51,31 @@ prefix <- paste0(varName, "_")
 
 # Select the NDVI differences.
 transects_NDVIdiff_DF <- 
-  transects_TwoDiff_SHP %>% 
-  select(ET_ID | starts_with(prefix)) %>% 
+  transects_TwoDiff_SHP|> 
+  select(ET_ID | starts_with(prefix))|> 
   st_drop_geometry()
 
-# head(transects_NDVIdiff_DF)
+colnames(transects_NDVIdiff_DF)
 
 # Rename the columns. 
 transects_NDVIdiff_Renamed <- 
-  transects_NDVIdiff_DF %>% 
+  transects_NDVIdiff_DF|> 
   rename_with(.fn = ~ gsub(prefix, "", .), # Remove the prefix.
-              .cols = -ET_ID) %>% 
+              .cols = -ET_ID)|> 
   rename_with(.fn = ~ gsub("_", ".", .), # Replace "_" with ".".
               .cols = -ET_ID)
 
-# head(transects_NDVIdiff_Renamed)
+colnames(transects_NDVIdiff_Renamed)
 
 # Rearrange the dataset.
 transects_NDVIdiff_Gathered <- 
-  transects_NDVIdiff_Renamed %>% 
+  transects_NDVIdiff_Renamed|> 
   gather(key = "Ratio", 
          value = "Difference", 
-         -ET_ID) %>% 
+         -ET_ID)|> 
   mutate(Type = varName)
 
-# head(transects_NDVIdiff_Gathered)
+head(transects_NDVIdiff_Gathered)
 
 
 # 3) VCH difference preprocessing. ----------------------------------------
@@ -85,36 +86,36 @@ prefix <- paste0(varName, "_")
 
 # Select the VCH differences.
 transects_VCHdiff_DF <- 
-  transects_TwoDiff_SHP %>% 
-  select(ET_ID | starts_with(prefix)) %>% 
+  transects_TwoDiff_SHP|> 
+  select(ET_ID | starts_with(prefix))|> 
   st_drop_geometry()
 
-# head(transects_VCHdiff_DF)
+colnames(transects_VCHdiff_DF)
 
 # Rename the columns. 
 transects_VCHdiff_Renamed <- 
-  transects_VCHdiff_DF %>% 
+  transects_VCHdiff_DF|> 
   rename_with(.fn = ~ gsub(prefix, "", .), # Remove the prefix.
-              .cols = -ET_ID) %>% 
+              .cols = -ET_ID)|> 
   rename_with(.fn = ~ gsub("_", ".", .), # Replace "_" with ".".
               .cols = -ET_ID)
 
-# head(transects_VCHdiff_Renamed)
+colnames(transects_VCHdiff_Renamed)
 
 # Rearrange the dataset.
 transects_VCHdiff_Gathered <- 
-  transects_VCHdiff_Renamed %>% 
+  transects_VCHdiff_Renamed|> 
   gather(key = "Ratio", 
          value = "Difference", 
-         -ET_ID) %>% 
+         -ET_ID)|> 
   mutate(Type = varName)
 
-# head(transects_VCHdiff_Gathered)
+head(transects_VCHdiff_Gathered)
 
 
 # 4) Dataset combination. -------------------------------------------------
 
-# Value used to transform the NDVI difference.
+# Coefficient used to scale the NDVI difference.
 coeff <- 38
 
 # Transform the NDVI difference.
@@ -130,9 +131,9 @@ transects_TwoDiff_Processed <-
         transects_VCHdiff_Gathered)
 
 # Change the format and level orders of "Angle" and "Type"
-#   for better ggplots.
+#   for a better visualization.
 transects_TwoDiff_Processed$Ratio <- 
-  transects_TwoDiff_Processed$Ratio %>% 
+  transects_TwoDiff_Processed$Ratio|> 
   as.factor()
 
 transects_TwoDiff_Processed$Type <- factor(
@@ -175,13 +176,9 @@ boxplot <-
   ) +
   scale_color_manual(
     values = c(VCH_color, NDVI_color)
-    # name = "Difference type", 
-    # labels = c("Canopy height", "NDVI")
     ) +
   scale_fill_manual(
     values = c(VCH_fill, NDVI_fill)
-    # name = "Difference type", 
-    # labels = c("Canopy height", "NDVI")
     ) +
   theme(
     # First Y-axis (VCH).
@@ -201,8 +198,6 @@ boxplot <-
     
     # Legend.
     legend.position = "none"
-    # legend.position = "bottom", 
-    # legend.title = element_text(face = "bold")
   )
 
 boxplot
