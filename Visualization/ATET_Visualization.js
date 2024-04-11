@@ -10,9 +10,9 @@
  *  The UI Pattern Template was provided by Tyler Erickson (tylere@google.com)
  *    and Justin Braaten (braaten@google.com) at Google.
  * 
- * Updated: 12/2/2023.
+ * Updated: 4/11/2024.
  * 
- * Author: Chenyang Wei (cwei5@buffalo.edu)
+ * Author: Chenyang Wei (chenyangwei.cwei@gmail.com)
  ******************************************************************************/
 
 
@@ -229,13 +229,14 @@ c.info.webLinks = {};
 c.info.webLinks.link_1 = 
   ui.Label({
     value: 'Check the Code',
-    targetUrl: 'https://raw.githubusercontent.com/'
-      + 'Chenyang-Wei/GEE_Modules/main/Public/'
-      + 'Apps/Treeline/ATET_Visualization'
+    targetUrl: 'https://github.com/Chenyang-Wei/'
+      + 'Alpine-Treeline-Elevational-Transects/'
+      + 'blob/main/Visualization/'
+      + 'ATET_Visualization.js'
   });
 c.info.webLinks.link_2 = ui.Label({
   value: 'Download the Data',
-  targetUrl: 'https://zenodo.org/records/10047965'
+  targetUrl: 'https://zenodo.org/records/10739392'
 });
 c.info.linkPanel = 
   ui.Panel({
