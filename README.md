@@ -1,5 +1,5 @@
 # **ATET v1.0**
-[![DOI](https://zenodo.org/badge/754369727.svg)](https://zenodo.org/doi/10.5281/zenodo.10729434)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10963053.svg)](https://doi.org/10.5281/zenodo.10963053)
 
 ## Transect Generation
 * [Google Earth Engine scripts](https://github.com/Chenyang-Wei/Alpine-Treeline-Elevational-Transects/tree/main/Generation) for constructing elevational transects in the Olympic Mountains, United States.
