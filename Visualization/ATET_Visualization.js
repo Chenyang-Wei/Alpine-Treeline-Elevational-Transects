@@ -6,11 +6,15 @@
  *    and Alpine Treeline Elevational Transect Centroids v1.0 (ATECs_v1.0)
  *    as well as their pertinent information.
  * 
+ * Source:
+ *  https://doi.org/10.5281/zenodo.10739392 (data)
+ *  https://doi.org/10.5281/zenodo.10963053 (code)
+ * 
  * Note: 
  *  The UI Pattern Template was provided by Tyler Erickson (tylere@google.com)
  *    and Justin Braaten (braaten@google.com) at Google.
  * 
- * Updated: 4/11/2024.
+ * Updated: 10/20/2025.
  * 
  * Author: Chenyang Wei (chenyangwei.cwei@gmail.com)
  ******************************************************************************/
@@ -27,7 +31,7 @@ var m = {};
 m.emptyImg = ee.Image().double();
 
 // Define the major file path.
-m.filePath = "users/treeline/Global/Elevational_Transects/";
+m.filePath = "projects/ee-chenyangwei/assets/ATET/v1_0/";
 
 // Define an object for storing the FeatureCollections.
 m.FtrCols = {};
@@ -60,25 +64,25 @@ m.FtrCols.ATECs =
 m.FtrCols.gmbaVCH = 
   ee.FeatureCollection(
     m.filePath
-      + "Aggregation/"
-      + "GMBAmeans_VCHdiff");
+      + "GMBA_mountains/"
+      + "GMBAmeans_CanopyHt_Diff");
 m.FtrCols.gmbaNDVI = 
   ee.FeatureCollection(
     m.filePath
-      + "Aggregation/"
-      + "GMBAmeans_NDVIdiff");
+      + "GMBA_mountains/"
+      + "GMBAmeans_NDVI_Diff");
 
 // Define the HYBAS watersheds.
 m.FtrCols.hybasVCH = 
   ee.FeatureCollection(
     m.filePath
-      + "Aggregation/"
-      + "HYBASmeans_VCHdiff");
+      + "HYBAS_watersheds/"
+      + "HYBASmeans_CanopyHt_Diff");
 m.FtrCols.hybasNDVI = 
   ee.FeatureCollection(
     m.filePath
-      + "Aggregation/"
-      + "HYBASmeans_NDVIdiff");
+      + "HYBAS_watersheds/"
+      + "HYBASmeans_NDVI_Diff");
 
 // Define info about ATETs.
 m.ATETinfo = {};
@@ -1158,16 +1162,18 @@ c.visualizeVegeDiff.diffSelector
 c.visualizeVegeDiff.diffSelector
   .onChange(updateLegend);
 c.visualizeVegeDiff.diffSelector
-  .onChange(function(value) {
-    // Update inspector if shown; assuming user wants to 
-    //  see updates to inspector.
-    if (c.inspector.shownButton.getLabel() == 'Hide information') {
-      inspectTransect({
-        lon: ui.url.get('click_lon'), 
-        lat: ui.url.get('click_lat')
-      });
+  .onChange(
+    function(value) {
+      // Update inspector no matter if it's shown or not.
+      if (c.inspector.shownButton.getLabel() == 'Hide information' || 
+          c.inspector.shownButton.getLabel() == 'Show information') {
+        inspectTransect({
+          lon: ui.url.get('click_lon'), 
+          lat: ui.url.get('click_lat')
+        });
+      }
     }
-  });
+  );
 
 // Difference-level panel.
 c.visualizeVegeDiff.levelCheckboxes.mountain
