@@ -1,5 +1,8 @@
-# **ATET v1.0**
+# **Alpine Treeline Elevational Transect (ATET) v1.0**
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.17428155-blue.svg)](https://doi.org/10.5281/zenodo.17428155)
+
+## Dataset
+* The ATET dataset is archived on [Zenodo](https://zenodo.org/records/10739392). The associated Data Descriptor is under review at _Scientific Data_, and a preprint is available on [EarthArXiv](https://eartharxiv.org/repository/view/10612/).
 
 ## Transect Generation
 * [Google Earth Engine scripts](https://github.com/Chenyang-Wei/Alpine-Treeline-Elevational-Transects/tree/main/Generation) for constructing elevational transects in the Olympic Mountains, United States.
