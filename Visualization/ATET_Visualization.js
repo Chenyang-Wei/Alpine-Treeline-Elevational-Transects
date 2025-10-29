@@ -7,14 +7,14 @@
  *    as well as their pertinent information.
  * 
  * Source:
- *  https://doi.org/10.5281/zenodo.10739392 (data)
- *  https://doi.org/10.5281/zenodo.10963053 (code)
+ *  https://zenodo.org/records/10739392 (data)
+ *  https://zenodo.org/records/17428155 (code)
  * 
  * Note: 
  *  The UI Pattern Template was provided by Tyler Erickson (tylere@google.com)
  *    and Justin Braaten (braaten@google.com) at Google.
  * 
- * Updated: 10/20/2025.
+ * Updated: 10/29/2025.
  * 
  * Author: Chenyang Wei (chenyangwei.cwei@gmail.com)
  ******************************************************************************/
@@ -230,18 +230,15 @@ c.info.introPanel =
 
 // Web links.
 c.info.webLinks = {};
-c.info.webLinks.link_1 = 
-  ui.Label({
-    value: 'Check the Code',
-    targetUrl: 'https://github.com/Chenyang-Wei/'
-      + 'Alpine-Treeline-Elevational-Transects/'
-      + 'blob/main/Visualization/'
-      + 'ATET_Visualization.js'
-  });
-c.info.webLinks.link_2 = ui.Label({
+c.info.webLinks.link_1 = ui.Label({
   value: 'Download the Data',
   targetUrl: 'https://zenodo.org/records/10739392'
 });
+c.info.webLinks.link_2 = 
+  ui.Label({
+    value: 'Check the Code',
+    targetUrl: 'https://zenodo.org/records/17428155'
+  });
 c.info.linkPanel = 
   ui.Panel({
     widgets: [
@@ -398,7 +395,7 @@ c.legend.panel =
 // Define a panel for inspecting a transect.
 c.inspector = {};
 c.inspector.shownButton = 
-  ui.Button('Hide information');
+  ui.Button("Show inspector"); // Hide the container panel.
 c.inspector.chartPanel = 
   ui.Panel();  // To hold the dynamically generated chart. 
 c.inspectorLabels = {};
@@ -526,7 +523,6 @@ c.map.add(c.inspector.inspectorPanel);
 ui.root.clear();
 ui.root.add(c.controlPanel);
 ui.root.add(c.map);
-
 
 
 /*******************************************************************************
@@ -717,8 +713,7 @@ c.legend.labelPanel.style()
 // Transect inspector.
 c.inspector.inspectorPanel.style()
   .set({
-    position: 'top-right',
-    shown: false
+    position: 'top-right' // Show the inspector panel (only the button).
   })
   .set(s.opacityWhiteMed);
 Object.keys(c.inspector)
@@ -729,6 +724,9 @@ Object.keys(c.inspector)
     }
   });
 c.inspector.shownButton.style()
+  .set(s.noMargin);
+c.inspector.inspectorContainer.style()
+  .set({shown: false}) // Hide the container panel.
   .set(s.noMargin);
 c.inspector.infoPanel.style()
   .set({
@@ -789,7 +787,7 @@ function zoomInMountain() {
   
   // Center the map.
   c.map.centerObject(
-    ee.FeatureCollection(selectedATETs).first(), 8);
+    ee.FeatureCollection(selectedATETs).first(), 9);
 }
 
 // Handles updating the display of transects.
@@ -1025,12 +1023,12 @@ function inspectTransect(coords) {
       .set('shown', true);
   }
   
-  // Show information if hidden; assuming user wants to 
+  // Show the inspector if hidden; assuming user wants to 
   //  update the inspector container.
-  if (c.inspector.shownButton.getLabel() == 'Show information') {
+  if (c.inspector.shownButton.getLabel() == 'Show inspector') {
     c.inspector.inspectorContainer.style()
       .set({shown: true});
-    c.inspector.shownButton.setLabel('Hide information');
+    c.inspector.shownButton.setLabel('Hide inspector');
   }
 
   // Add the clicked point to map.
@@ -1121,10 +1119,10 @@ function inspectTransect(coords) {
 // Handles showing/hiding the chart panel.
 function showHideChart() {
   var shown = true;
-  var label = 'Hide information';
-  if (c.inspector.shownButton.getLabel() == 'Hide information') {
+  var label = 'Hide inspector';
+  if (c.inspector.shownButton.getLabel() == 'Hide inspector') {
     shown = false;
-    label = 'Show information';
+    label = 'Show inspector';
   }
   c.inspector.inspectorContainer.style()
     .set({shown: shown});
@@ -1152,7 +1150,7 @@ c.displayTransects.transectCheckbox
 c.displayTransects.centroidCheckbox
   .onChange(updateCentroidDisplay);
 
-// Difference-type panel
+// Difference-type panel.
 c.visualizeVegeDiff.diffSelector
   .onChange(updateMountainDifference);
 c.visualizeVegeDiff.diffSelector
@@ -1165,8 +1163,8 @@ c.visualizeVegeDiff.diffSelector
   .onChange(
     function(value) {
       // Update inspector no matter if it's shown or not.
-      if (c.inspector.shownButton.getLabel() == 'Hide information' || 
-          c.inspector.shownButton.getLabel() == 'Show information') {
+      if (c.inspector.shownButton.getLabel() == 'Hide inspector' || 
+          c.inspector.shownButton.getLabel() == 'Show inspector') {
         inspectTransect({
           lon: ui.url.get('click_lon'), 
           lat: ui.url.get('click_lat')
@@ -1188,6 +1186,8 @@ c.visualizeVegeDiff.levelCheckboxes.transect
 // Map panel.
 c.map.onClick(inspectTransect);
 c.map.onClick(updateUrlParamClick);
+
+// Inspector.
 c.inspector.shownButton.onClick(showHideChart);
 
 
@@ -1216,3 +1216,4 @@ inspectTransect({
   lon: ui.url.get('click_lon'), 
   lat: ui.url.get('click_lat')
 });
+
